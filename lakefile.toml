@@ -1,0 +1,7 @@
+name = "mines-lean"
+version = "0.1.0"
+defaultTargets = ["mines-lean"]
+
+[[lean_exe]]
+name = "mines-lean"
+root = "Main"
