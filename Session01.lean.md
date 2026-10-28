@@ -260,7 +260,7 @@ theorem the_answer_is_forty_two : answer = 42 := by decide
 ```
 
 
-Expression vs statements
+Expression vs statements (Python)
 --------------------------------------------------------------------------------
 
 One core characteristic of the functional style of programming with respect
