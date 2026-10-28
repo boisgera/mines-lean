@@ -271,10 +271,10 @@ to the imperative one is the emphasis on *expressions*, that are evaluated
 Python supports some imperative constructs as well as some functional ones.
 The two built-ins `eval` and `exec` mirror this split:
 
-| Function | Accepts | Returns |
-|----------|---------|---------|
+| Function       | Accepts                        | Returns                      |
+|----------------|--------------------------------|------------------------------|
 | `eval(source)` | expression only                | the value of that expression |
-| `exec(source)` | any code (statements included) | always `None` |
+| `exec(source)` | any code (statements included) | always `None`                |
 
 Many statements have an expression-level counterpart; we illustrate this on
 three examples:
