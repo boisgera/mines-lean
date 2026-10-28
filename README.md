@@ -1,5 +1,5 @@
 # Mines Lean 2026
 
-Lecture notes
+Lecture notes:
 
-- [Session 1](Session01.lean) [Markdown](Session01.lean.md)
+- Session 01: [Lean](Session01.lean), [Markdown](Session01.lean.md)
