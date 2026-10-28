@@ -264,8 +264,8 @@ Expression vs statement (Python)
 --------------------------------------------------------------------------------
 
 One core characteristic of the functional style of programming with respect
-to the imperative one is the emphasis on **expressions**, that are evaluated
-(i.e. turned into a value), instead of **statements** who perform actions
+to the imperative one is the emphasis on *expressions*, that are evaluated
+(i.e. turned into a value), instead of *statements* who perform actions
 (i.e. have side-effects).
 
 Python supports some imperative constructs as well as some functional ones.
