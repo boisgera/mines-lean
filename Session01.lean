@@ -261,6 +261,7 @@ is very simple!
 theorem the_answer_is_forty_two : answer = 42 := by decide
 
 /-!
+
 Expression vs statements
 --------------------------------------------------------------------------------
 
@@ -501,3 +502,5 @@ with no mutation and no intermediate empty list.
 >>> eval("[i * i for i in [1, 2, 3]]")
 [1, 4, 9]
 ```
+
+-/
