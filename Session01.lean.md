@@ -258,3 +258,246 @@ is very simple!
 ```lean4
 theorem the_answer_is_forty_two : answer = 42 := by decide
 ```
+
+```lean4
+Expression vs statements
+--------------------------------------------------------------------------------
+
+One core characteristic of the functional style of programming with respect
+to the imperative one is the emphasis on *expressions*, that are evaluated
+(i.e. turned into a value), instead of **statements** who perform actions.
+
+Python supports some imperative constructs as well as some functional ones.
+The two built-ins `eval` and `exec` mirror this split:
+
+| Function | Accepts | Returns |
+|----------|---------|---------|
+| `eval(source)` | expression only                | the value of that expression |
+| `exec(source)` | any code (statements included) | always `None` |
+
+Many statements have an expression-level counterpart; we illustrate this on
+three examples:
+  - `if` → conditional expression,
+  - `def` → `lambda`,
+  - `for` + `append` → list comprehension.
+
+```pycon
+>>> 1 + 1 # expression
+2
+```
+
+```pycon
+>>> a = 2 # statement (assignment)
+```
+
+```pycon
+>>> eval("1 + 1")
+2
+```
+
+The `exec` of this expression runs, but has no side-effect and the value is lost.
+
+```pycon
+>>> exec("1 + 1")
+```
+
+```pycon
+>>> eval("a = 2")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 1
+    a = 2
+      ^
+SyntaxError: invalid syntax
+```
+
+```pycon
+>>> exec("a = 2")
+>>> print(a)
+2
+```
+
+### `if-then-else` constructs
+
+In the sequel, `name` stands for `"Penelope"`:
+
+```pycon
+>>> name = "Penelope"
+```
+
+In this context, we have:
+
+```pycon
+>>> if name == "Nobody":
+...     print("Hello Odysseus!")
+... else:
+...     print(f"Hello {name}!")
+...
+Hello Penelope!
+```
+
+A classic branching statement: when `name = "Penelope"`,
+the `else` branch runs and prints `Hello Penelope`.
+The statement itself is not an expression, it has no value;
+it acts through the side effect of `print`.
+
+```python
+>>> exec(
+... """
+... if name == "Nobody":
+...     print("Hello Odysseus!")
+... else:
+...     print(f"Hello {name}!")
+... """
+... )
+...
+Hello Penelope!
+```
+
+```pycon
+>>> eval(
+... """
+... if name == "Nobody":
+...     print("Hello Odysseus!")
+... else:
+...     print(f"Hello {name}!")
+... """
+... )
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 2
+    if name == "Nobody":
+    ^^
+SyntaxError: invalid syntax
+```
+
+Since `if` is a statement, it cannot go through `eval`, but `exec` handles it.
+
+```pycon
+>>> greetings = "Hello Odysseus" if name == "Noman" else f"Hello {name}"
+>>> print(greetings)
+Hello Penelope!
+```
+
+`A if condition else B` is the *expression* counterpart of `if`/`else`:
+it evaluates to a value (`"Hello Penelope"`), which is then stored in `greetings`
+and printed. Instead of *doing* something in each branch, we *compute a value*.
+
+```pycon
+>>> eval('"Hello Odysseus!" if name == "Noman" else f"Hello {name}!"')
+'Hello Penelope!'
+```
+
+Since we have an expression, `eval` accepts it and returns the string
+`"Hello Penelope!"`.
+
+### Function definition
+
+
+```pycon
+>>> def succ(n):
+...     return n + 1
+...
+>>> succ(42)
+43
+```
+
+`def` is a statement: it binds the name `succ` to a new function object.
+
+
+```pycon
+>>> eval(
+... """
+... def succ(n):
+...     return n + 1
+... """
+... )
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 2
+    def succ(n):
+    ^^^
+SyntaxError: invalid syntax
+```
+
+Another `SyntaxError`: a function definition is a statement, so `eval` rejects it.
+`exec` would be required here.
+
+```pycon
+>>> exec(
+... """
+... def succ(n):
+...     return n + 1
+... """
+... )
+```
+
+But we can also use the anonymous (or lambda) function construct here:
+```pycon
+>>> succ_alt = lambda n : n + 1
+>>> succ_alt(42)
+43
+```
+
+`lambda n: n + 1` is an *expression* that evaluates to a function object.
+Assigning it to `succ_alt` (a statement) gives a function equivalent to `succ`.
+However we don't *need* to name this function, we can immediately invoke it:
+
+```python
+>>> (lambda n : n + 1)(42)
+43
+```
+
+```pycon
+>>> eval("lambda n : n + 1")
+<function <lambda> at 0x...>
+```
+
+This works, because a lambda is an expression and `eval` returns the function
+object itself .
+
+### `for` constructs
+
+To compute a list of squares in an imperative way: start with an empty list and
+mutate it inside a loop. `for` is a statement and `append` works by side effect.
+
+
+```pycon
+>>> squares = []
+>>> for i in [1, 2, 3]:
+...     squares.append(i * i)
+...
+>>> squares
+[1, 4, 9]
+```
+
+Here the for loop is an expression:
+
+```pycon
+>>> eval("""
+... for i in [1, 2, 3]:
+...     squares.append(i * i)
+... """)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<string>", line 2
+    for i in [1, 2, 3]:
+    ^^^
+SyntaxError: invalid syntax
+```
+
+A functional alternative is the loop comprehension:
+
+```pycon
+>>> squares_alt = [i * i for i in [1, 2, 3]]
+>>> squares_alt
+[1, 4, 9]
+```
+The comprehension is an *expression* that directly evaluates to the desired list,
+with no mutation and no intermediate empty list.
+
+```pycon
+>>> eval("[i * i for i in [1, 2, 3]]")
+[1, 4, 9]
+```
+```
