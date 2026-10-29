@@ -439,7 +439,7 @@ Let's have a look at the signature of `IO.println`:
 #check IO.println
 -- IO.println.{u_1} {α : Type u_1} [ToString α] (s : α) : IO Unit
 
-/-
+/-!
 `[ToString α]` is the (implicit) requirement that `alpha` has an instance
 of the *type class* `ToString`, which concretely means that there is an
 explicit function that has been declared to convert terms of type `α`
@@ -450,7 +450,7 @@ into strings.
 The same (implicit) type class construct can be used in theorems.
 For example, to formalize and prove that in any group $G$,
 any element $a$ such that for any $b \in G$, $a \times b = b$ and
-$b \times a = $ is the neutral element $1$, one uses the `Group`
+$b \times a = b$ is the neutral element $1$, one uses the `Group`
 type class:
 
 -/
