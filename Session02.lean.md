@@ -431,7 +431,7 @@ Let's have a look at the signature of `IO.println`:
 -- IO.println.{u_1} {α : Type u_1} [ToString α] (s : α) : IO Unit
 ```
 
-`[ToString α]` is the (implicit) requirement that `alpha` has an instance
+`[ToString α]` is the (implicit) requirement that `α` has an instance
 of the *type class* `ToString`, which concretely means that there is an
 explicit function that has been declared to convert terms of type `α`
 into strings.
