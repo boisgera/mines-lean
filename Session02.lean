@@ -456,8 +456,7 @@ type class:
 -/
 
 theorem unique_inverse.{u} (G : Type u) [Group G] :
-    ∀ (a : G), (∀ (b : G), a * b = b ∧ b * a = b) → a = 1
-  := by
+    ∀ (a : G), (∀ (b : G), a * b = b ∧ b * a = b) → a = 1 := by
   intro a h
   specialize h 1
   have ⟨hl, _⟩ := h
