@@ -101,6 +101,8 @@ def g (n : Nat) : Nat :=
 #eval String.length "Lean 4"  -- Output: 6
 #eval List.reverse [1, 2, 3]  -- Output: [3, 2, 1]
 
+#print List.reverse
+
 #check String.length_eq_zero_iff
 -- String.length_eq_zero_iff {s : String} : s.length = 0 ↔ s = ""
 
@@ -145,3 +147,295 @@ def m := -12
 -- Check function types
 #check String.length   -- String.length (b : String) : Nat
 #check List.reverse    -- List.reverse.{u} {α : Type u} (as : List α) : List α
+
+
+#check [1, 2, 3]
+-- [1, 2, 3] : List Nat
+
+#check ["Hello", " ", "world", "!"]
+-- ["Hello", " ", "world", "!"] : List String
+
+#check [1, 2, "Hello"]
+
+#eval List.reverse [1, 2, 3]
+-- failed to synthesize instance of type class
+--   OfNat String 2
+-- numerals are polymorphic in Lean, but the numeral `2` cannot be used in a context where the expected type is
+--   String
+-- due to the absence of the instance above
+
+/-!
+List is polymorph but homogeneous.
+-/
+
+#check List.reverse
+-- List.reverse.{u} {α : Type u} (as : List α) : List α
+
+#eval List.reverse [1, 2, 3] -- [3, 2, 1] -- Nat is *implicit*
+
+#eval List.reverse ["Hello", " ", "world", "!"]
+-- ["!", "world", " ", "Hello"] -- String is *implicit*
+
+#eval List.reverse (α := Nat) [1, 2, 3] -- [1, 2, 3]
+
+#eval List.reverse (α := String) [1, 2, 3] -- [1, 2, 3] -- Nope...
+
+#check "Hello!"
+-- "Hello!" : String
+
+#check String
+-- String : Type
+
+#check Type -- i.e. Type 0
+-- Type : Type 1
+
+#check Type 1
+-- Type 1: Type 2
+
+#check List.reverse [Int, Nat, String]
+-- [Int, Nat, String].reverse : List Type
+
+theorem my_theorem :
+    [Int, Nat, String].reverse = [String, Nat, Int] := by
+  rfl
+
+#eval toString 42
+-- "42"
+
+#eval toString "Hello!"
+-- "Hello!"
+
+#eval toString Int
+-- failed to synthesize instance of type class
+--   ToString Type
+
+#check toString
+-- ToString.toString.{u} {α : Type u} [self : ToString α] : α → String
+
+/-
+TODO: prove that one * one = one for groups.
+-/
+
+
+#check Int
+#check Nat
+#check String
+#check Float
+-- Float: Type
+
+#eval 1.2e3
+-- 1200.000000
+
+#check 1.2e3
+-- 12e2 : Float
+
+#check 1.2e10
+-- 12e9 : Float
+
+#check 1.2e-10
+-- 12e-11 : Float
+
+#eval IO.println 1.2e10
+-- 12000000000.000000
+
+#eval IO.println 1.2e-10
+-- 0.000000
+
+#eval IO.println 1.2345678910123456789
+
+#eval IO.println ((0.1 + 0.2) + 0.3)
+-- 0.600000
+
+#eval IO.println (0.1 + (0.2 + 0.3))
+-- 0.600000
+
+#eval ((0.1 + 0.2) + 0.3) == (0.1 + (0.2 + 0.3))
+-- false
+
+def pi := 4 * (Float.atan 1.0)
+
+#eval pi
+-- 3.141593
+
+def Float.pi := 4 * (atan 1.0)
+
+#eval Float.pi
+-- 3.141593
+
+namespace Float
+
+def pi_alt := 4 * (atan 1.0)
+
+end Float
+
+#eval Float.pi_alt
+
+#eval Float.sin 1.0
+-- 0.841471
+
+#eval (1.0).sin
+-- 0.841471
+
+#check Bool
+-- Bool : Type
+
+#check true
+-- Bool.true : Bool
+
+#check True
+-- True : Prop
+
+#eval True -- decidable Prop
+-- true
+
+#eval ((true && !false) || false)
+-- true
+
+#eval Bool.and -- &&
+
+#eval ((True ∧ ¬False) ∨ False)
+-- true
+
+#check UInt8 -- 1 byte
+#check Int32 -- 4 byte
+
+#eval (255 : UInt8) + 1
+-- 0
+
+#check Fin 10
+
+#eval (8 : Fin 10)
+-- 8
+
+#eval (8 : Fin 10) + 3
+-- 1
+
+#check Float   -- 64 bits ("double")
+#check Float32 -- 32 bits ("single")
+
+#check Nat.add
+-- Nat.add : Nat → Nat → Nat
+
+#check Nat.sub
+-- Nat.sub : Nat → Nat → Nat
+
+#eval 3 - 7
+-- 0 -- !!! "Junk value"
+
+#eval (3 : Int) - 7
+-- -4
+
+#check String
+-- String : Type
+
+#check Char
+-- Char: Type
+
+#check "Hello world!"
+-- "Hello world!" : String
+
+#check 'A'
+-- 'A' : Char
+
+#check "Hello world!".toList
+-- "Hello world!".toList : List Char
+
+#eval "Hello world!".toList
+-- ['H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '!']
+
+#eval String.ofList ['H', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', '!']
+-- "Hello world!"
+
+#check '∀'
+-- '∀' : Char
+
+#check '😀'
+-- '😀' : Char
+
+#eval '😀'.toNat
+-- 128512
+
+#eval 'A'.toNat
+-- 65 -- ASCII: number <= 127
+
+#eval 'é'.toNat
+-- 233
+
+#eval Char.ofNat 128512
+-- '😀'
+
+-- String interpolation
+def name := "Lean"
+
+#eval s!"Hello, {name}!"
+-- "Hello, Lean!"
+
+#check Unit
+-- Unit: Type
+
+#check ()
+-- () : Unit
+
+#check Unit.unit
+-- Unit.unit : Unit
+
+/-!
+Functions
+--------------------------------------------------------------------------------
+-/
+
+namespace Sandbox
+
+def oneAddOne : Nat := 1 + 1
+
+def succ (n : Nat) : Nat := n + 1
+
+def succ_alt : Nat → Nat := fun (n : Nat) => (n + 1 : Nat)
+
+#check succ_alt
+-- Sandbox.succ_alt (n : Nat) : Nat
+
+#check @succ_alt
+-- succ_alt : Nat → Nat
+
+def add (m : Nat) (n : Nat) : Nat := m + n
+
+#check @add -- Currying
+-- add : Nat → Nat → Nat
+
+#check Nat → Nat → Nat -- Nat → (Nat → Nat)? or (Nat → Nat) → Nat?
+-- Nat → Nat → Nat : Type
+
+#check Nat → (Nat → Nat)
+-- Nat → Nat → Nat : Type
+
+#check (Nat → Nat) → Nat
+-- (Nat → Nat) → Nat : Type
+
+#eval add 1 2
+-- 3
+
+#check (add 1) 2
+-- add 1 2 : Nat
+
+def succ_alt2 := add 1
+
+#eval succ_alt2 2
+-- 3
+
+#check (1, "Hello", true)
+-- (1, 2, 3) : Nat × String × Bool
+
+#check Nat × (String × Bool)
+-- Nat × String × Bool : Type
+
+#print Prod
+-- structure Prod.{u, v} (α : Type u) (β : Type v) : Type (max u v)
+-- number of parameters: 2
+-- fields:
+--   Prod.fst : α
+--   Prod.snd : β
+-- constructor:
+--   Prod.mk.{u, v} {α : Type u} {β : Type v} (fst : α) (snd : β) : α × β
+
+end Sandbox
