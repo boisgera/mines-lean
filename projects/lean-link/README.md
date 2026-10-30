@@ -105,7 +105,8 @@ def Lean.uri (source : String) : String :=
 
 ```lean
 /--
-info: https://live.lean-lang.org/#code=def%20two%20%3A%3D%201%20%2B%201-/
+info: https://live.lean-lang.org/#code=def%20two%20%3A%3D%201%20%2B%201
+-/
 #guard_msgs in
 #eval IO.println (Lean.uri "def two := 1 + 1")
 ```
@@ -113,7 +114,7 @@ info: https://live.lean-lang.org/#code=def%20two%20%3A%3D%201%20%2B%201-/
 ### Command-line interface
 
 Define a `usage` action that prints the tool help message 
-`"Usage: lean-link LEAN-FILE [EXTRA-FILE]..."`
+`"Usage: lean-link LEAN-FILE"`
 
 ```lean
 def usage : IO Unit :=
@@ -122,7 +123,7 @@ def usage : IO Unit :=
 
 Implement the `main` program entry point that
 - prints the help message if no argument is given or
-- display the playground link for each file given in the arguments.
+- display the playground link for the given file name.
 
 ```lean
 def main (args : List String) : IO Unit :=
