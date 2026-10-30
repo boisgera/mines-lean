@@ -29,7 +29,7 @@ you could invoke `lean-link` and obtain the corresponding link:
 
 ```bash
 $ lean-link HelloLeanWeb.lean
-https://live.lean-lang.org/#codez=CYUwZgBAtghglgOwgLgLwQJIHkB0AHAJ0QBcAbJAIgAkRTSB7CAGRBiQHUQAjAQgoCh%2BAYhAA3GKWjwEQA
+https://live.lean-lang.org/#code=def%20main%20%3A%3D%20IO.println%20%22Hello%20Lean%20Web!%22%0A%0A%23eval%20main
 ```
 
 Preparation
