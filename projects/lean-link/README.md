@@ -1,9 +1,8 @@
 Lean Link
 ================================================================================
 
-The [Lean Web] project develops a Lean playground, 
-running Lean 4 server-side exposed with a Lean 4 code editor
-and execution environment in the browser. 
+The [Lean Web] project develops a Lean playground, which provides a Lean 4
+code editor and execution environment in the browser. 
 
 The official playground instance is hosted at <https://live.lean-lang.org/>.
 
