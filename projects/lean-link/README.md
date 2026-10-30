@@ -16,7 +16,7 @@ def main := IO.println "Hello Lean Web!"
 #eval main
 ```
 
-you can click on `https://live.lean-lang.org/#codez=CYUwZgBAtghglgOwgLgLwQJIHkB0AHAJ0QBcAbJAIgAkRTSB7CAGRBiQHUQAjAQgoCh%2BAYhAA3GKWjwEQA`.
+you can click on <https://live.lean-lang.org/#codez=CYUwZgBAtghglgOwgLgLwQJIHkB0AHAJ0QBcAbJAIgAkRTSB7CAGRBiQHUQAjAQgoCh%2BAYhAA3GKWjwEQA>.
 
 
 
