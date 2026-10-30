@@ -22,10 +22,8 @@ def main := IO.println "Hello Lean Web!"
 you can click on <https://live.lean-lang.org/#codez=CYUwZgBAtghglgOwgLgLwQJIHkB0AHAJ0QBcAbJAIgAkRTSB7CAGRBiQHUQAjAQgoCh%2BAYhAA3GKWjwEQA>.
 
 The idea of the Lean Link project is to bridge local development with the online
-playground: given some self-contained Lean files on your computer, 
-produce the corresponding Lean playground addresses. 
-If you have a local version `Hello.lean` of the above program, 
-you could invoke `lean-link` and obtain the corresponding link:
+playground: if you have a local version `Hello.lean` of the above program, 
+invoke `lean-link` to get the corresponding link:
 
 ```bash
 $ lean-link HelloLeanWeb.lean
