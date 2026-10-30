@@ -456,17 +456,18 @@ type class:
 -/
 
 theorem unique_inverse.{u} (G : Type u) [Group G] :
-    ∀ (a : G), (∀ (b : G), a * b = b ∧ b * a = b) → a = 1 := by
-  intro a h
+    ∀ (a : G), ((∀ (b : G), a * b = b ∧ b * a = b) → a = 1) := by
+  intro a
+  intro h
   specialize h 1
-  have ⟨hl, _⟩ := h
+  have ⟨hl, _hr⟩ := h
   simp only [mul_one] at hl
   exact hl
 
 /-!
 The theorem is proven for all groups, we can now specialize it for
-any group, for example $\mathbb{R}^*$, the group of units (invertible elements)
-of $\mathbb{R}$.
+any group, for example $\mathbb{R}^*$, the group of units
+(invertible elements) of $\mathbb{R}$.
 -/
 
 theorem unique_inverse_real_units :
@@ -482,15 +483,174 @@ That works because Lean knows that `ℝˣ` is a group (an instance of
 -- Units.instGroup
 
 /-!
+There is also a muliply internal operation in `Unit`
+-/
+
+#eval () * ()
+-- PUnit.unit
+
+/-!
+and it gives the type a structure of group.
+-/
+
+#synth Group Unit
+
+/-!
+Therefore our general theorem has another (trivial!) corollary:
+-/
+
+theorem unique_inverse_Unit :
+    ∀ (a : Unit), (∀ (b : Unit), a * b = b ∧ b * a = b) → a = 1 :=
+  unique_inverse Unit
+
+
+/-!
 Primitive Types
 --------------------------------------------------------------------------------
 -/
 
-#check Int
-#check Nat
-#check String
-#check Float
--- Float: Type
+/-!
+### Unit
+
+The reference type that contains a single value.
+
+-/
+
+#check Unit
+-- Unit: Type
+
+#check ()
+-- () : Unit
+
+#check Unit.unit
+-- Unit.unit : Unit
+
+/-!
+### Bool
+-/
+
+#check Bool
+-- Bool : Type
+
+
+#check false
+-- Bool.false : Bool
+
+#check true
+-- Bool.true : Bool
+
+/-!
+⚠️: `True` and `False` also exist but they are a different kind of terms:
+they are (decidable) propositions.
+-/
+
+#check True
+-- True : Prop
+
+#eval True -- since `True` is decidable, #eval returns a `Bool`
+-- true
+
+/-!
+The and (`&&`), or (`||`) and not (`!`) boolean operators:
+-/
+
+#eval ((true && !false) || false)
+-- true
+
+/-!
+The *desugared* version, with the corresponding functions:
+-/
+
+#eval Bool.or (Bool.and true (Bool.not false)) false
+-- true
+
+/-!
+We can do the same kind of computations with the `False` and `True` props
+again since we are only dealing with decidable propositions. However the
+corresponding logical operators have another syntax.
+-/
+
+#eval ((True ∧ ¬False) ∨ False)
+-- true
+
+/-!
+This desugars into
+-/
+
+#eval Or (And True (Not False)) False
+
+
+/-!
+### Integers
+-/
+
+/-!
+We have already dealt with `Nat` and `Int`. We won't say much more here,
+except that one should be cautious with some operations such as substraction
+on the natural numbers.
+-/
+
+#check Nat.sub
+-- Nat.sub : Nat → Nat → Nat
+
+/-!
+Since the function is defined for every pair of natural numbers and returns
+a natural number, it has to produce a value in every, even when it
+"doesn't make sense", such as:
+-/
+
+#eval 3 - 7
+-- 0 -- !!! "Junk value"
+
+/-!
+In such cases, the value used is 0.
+-/
+
+/-!
+If your intent is to produce a negative number, coerce (at least one of) your
+numbers in `Int` before performing the substraction.
+-/
+
+#eval (3 : Int) - 7
+-- -4
+
+
+/-!
+There are additionally bounded
+integers, which come into two flavors.
+-/
+
+/-!
+First we have the fixed-size, hardware-friendly version of bounded integers,
+either signed or unisgned, which will be familiar to NumPy users.
+-/
+
+#check UInt8 -- 1 byte
+#check Int32 -- 4 byte
+
+#eval (255 : UInt8) + 1
+-- 0
+
+/-!
+But we also have a version of natural number associated to an arbitrary
+(strict) upper bound, such as:
+-/
+
+#check Fin 10
+
+#eval (8 : Fin 10)
+-- 8
+
+#eval (8 : Fin 10) + 3 -- wrap around behavior beyond 9
+-- 1
+
+
+
+/-!
+### Floating-point numbers
+-/
+
+
 
 #eval 1.2e3
 -- 1200.000000
@@ -504,6 +664,11 @@ Primitive Types
 #check 1.2e-10
 -- 12e-11 : Float
 
+/-!
+The default representation of floats as strings is quite inconvenient. It can
+be very large and lose a lot of precision.
+-/
+
 #eval IO.println 1.2e10
 -- 12000000000.000000
 
@@ -511,6 +676,7 @@ Primitive Types
 -- 0.000000
 
 #eval IO.println 1.2345678910123456789
+-- 1.234568
 
 #eval IO.println ((0.1 + 0.2) + 0.3)
 -- 0.600000
@@ -521,78 +687,49 @@ Primitive Types
 #eval ((0.1 + 0.2) + 0.3) == (0.1 + (0.2 + 0.3))
 -- false
 
+/-!
+There are some mathematics constants and functions in the `Float` namespace:
+-/
+
+#eval Float.pi -- Mathlib is required for this to work.
+-- 3.141593
+
 def pi := 4 * (Float.atan 1.0)
 
 #eval pi
 -- 3.141593
 
-def Float.pi := 4 * (atan 1.0)
+def Float.pi_alt := 4 * (atan 1.0)
 
-#eval Float.pi
+#eval Float.pi_alt
 -- 3.141593
 
 namespace Float
 
-def pi_alt := 4 * (atan 1.0)
+def pi_alt2 := 4 * (atan 1.0)
 
 end Float
 
-#eval Float.pi_alt
+#eval Float.pi
 
 #eval Float.sin 1.0
 -- 0.841471
 
+/-!
+With the dot syntax, alternatively:
+-/
+
 #eval (1.0).sin
 -- 0.841471
 
-#check Bool
--- Bool : Type
-
-#check true
--- Bool.true : Bool
-
-#check True
--- True : Prop
-
-#eval True -- decidable Prop
--- true
-
-#eval ((true && !false) || false)
--- true
-
-#eval Bool.and -- &&
-
-#eval ((True ∧ ¬False) ∨ False)
--- true
-
-#check UInt8 -- 1 byte
-#check Int32 -- 4 byte
-
-#eval (255 : UInt8) + 1
--- 0
-
-#check Fin 10
-
-#eval (8 : Fin 10)
--- 8
-
-#eval (8 : Fin 10) + 3
--- 1
 
 #check Float   -- 64 bits ("double")
 #check Float32 -- 32 bits ("single")
 
-#check Nat.add
--- Nat.add : Nat → Nat → Nat
 
-#check Nat.sub
--- Nat.sub : Nat → Nat → Nat
-
-#eval 3 - 7
--- 0 -- !!! "Junk value"
-
-#eval (3 : Int) - 7
--- -4
+/-!
+### Text and characters
+-/
 
 #check String
 -- String : Type
@@ -639,14 +776,10 @@ def name := "Lean"
 #eval s!"Hello, {name}!"
 -- "Hello, Lean!"
 
-#check Unit
--- Unit: Type
-
-#check ()
--- () : Unit
-
-#check Unit.unit
--- Unit.unit : Unit
+/-!
+Have a look at [this document](https://lean4.dev/language/foundations/primitives)
+for a list of common string functions.
+-/
 
 /-!
 Functions
@@ -655,24 +788,48 @@ Functions
 
 namespace Sandbox
 
+/-!
+One can either define a function as an expression that depends on some
+parameters, that is something that generalized expression with constant
+terms.
+-/
+
 def oneAddOne : Nat := 1 + 1
 
 def succ (n : Nat) : Nat := n + 1
+
+/-!
+or as an object in itself:
+-/
 
 def succ_alt : Nat → Nat := fun (n : Nat) => (n + 1 : Nat)
 
 #check succ_alt
 -- Sandbox.succ_alt (n : Nat) : Nat
 
+/-!
+Lean with use `→` to denote function type. `α → β` refers to the type of
+functions with an argument of type `α` and return a value of type `β`.
+-/
+
 #check @succ_alt
 -- succ_alt : Nat → Nat
 
+/-!
+Here is the type of a function of two arguments, like `Nat.add`:
+-/
+
 def add (m : Nat) (n : Nat) : Nat := m + n
 
-#check @add -- Currying
+#check @add
 -- add : Nat → Nat → Nat
 
-#check Nat → Nat → Nat -- Nat → (Nat → Nat)? or (Nat → Nat) → Nat?
+/-!
+`Nat → Nat → Nat` should be interpreted as `Nat → (Nat → Nat)`:
+-/
+
+-- Nat → (Nat → Nat)? or (Nat → Nat) → Nat?
+#check Nat → Nat → Nat
 -- Nat → Nat → Nat : Type
 
 #check Nat → (Nat → Nat)
@@ -681,19 +838,56 @@ def add (m : Nat) (n : Nat) : Nat := m + n
 #check (Nat → Nat) → Nat
 -- (Nat → Nat) → Nat : Type
 
+/-!
+Therefore, `Nat.add` function should be interpreted as a function that has
+a natural number argument and that returns a function that has a natural
+arguments and returns a natural number. We don't need a special concept
+of "functions" of several arguments ; we can always [curry] such functions
+into functions of a single argument.
+
+[curry]: https://en.wikipedia.org/wiki/Currying
+-/
+
+/-
+The expression `add 1 2` can be interpreted as the application of the
+function `add` to the two parameters `1` and `2`.
+-/
+
 #eval add 1 2
 -- 3
 
+/-!
+but with the previous currying logic, we can (and probably should!) also
+interpret this as
+-/
+
 #check (add 1) 2
 -- add 1 2 : Nat
+
+/-!
+which makes obvious that first we apply the function to a first argument,
+which gives us a partially evaluated function, then apply it to the third.
+The partially evaluated function can be interesting in itself:
+-/
 
 def succ_alt2 := add 1
 
 #eval succ_alt2 2
 -- 3
 
+/-!
+Note that the "we don't need to define a structure for n terms, only for
+two and work the rest of the definition by recursion" is also used for
+tuples.
+
+For example, the type of triples `Nat × String × Bool` is actually
+a pair of a `Nat` and a pair of a `String` and a `Bool`.
+-/
+
 #check (1, "Hello", true)
 -- (1, 2, 3) : Nat × String × Bool
+
+
 
 #check Nat × (String × Bool)
 -- Nat × String × Bool : Type
