@@ -72,7 +72,7 @@ that give the hex code of any number between 0 and 255.
 ### URI encoding
 
 Develop a function that maps every character from string into the corresponding 
-`%XX` code used by ``encodeURIComponent`.
+`%XX` code used by `encodeURIComponent`.
 
 ```lean
 def URI.encodeAll (s : String) : String :=
