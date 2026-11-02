@@ -9,3 +9,4 @@ Lecture notes:
 Projects:
 
 - [Lean Link](projects/lean-link)
+- [Lean Markdown](projects/lean-markdown)
