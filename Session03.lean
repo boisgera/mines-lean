@@ -118,8 +118,8 @@ def repeatStrAlt (s : String) (n : Nat) : String :=
 /-!
 Our definition of factorial is using structural recursion on its argument `n`:
 it defines the value of `fact n` using the value of `fact (n - 1)`, with the
-adjunction of a base case for `n = 0`. Some recursive function definition
-won't work like that are still valid, for example
+adjunction of a base case for `n = 0`. Some recursive function definitions
+won't work like but are still valid terminating in every case, for example
 -/
 
 def mod (m n : Nat) : Nat := -- implementation of m % n
@@ -150,9 +150,10 @@ decreasing_by decreasing_tactic
 /-!
 Lean cannot automatically identify all valid recursive definition which use
 well-founded recursion. In some cases, you may have to provide your own
-proof, for example, to compute the greatest common divisor of $m$ and $n$,
+proof.
+For example, to compute the greatest common divisor of $m$ and $n$,
 we can use the property that it's the same as the greatest common divisor
-of $n$ and $m % n$. To prove that the second argument is decreasing,
+of $n$ and $m \% n$. To prove that the second argument is decreasing,
 we use the theorem that if $m % n < m$ whenever $n > 0$.
 -/
 
