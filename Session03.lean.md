@@ -314,7 +314,7 @@ To get the value out of the action, we use the `<-` notation:
 /--
 Display time elapsed since Unix epoch
 -/
-def displayTime (args : List String) : IO UInt32 := do
+def displayTime (_ : List String) : IO UInt32 := do
   let getTs : IO Timestamp := Timestamp.now
   let ts : Timestamp <- getTs -- or : let ts : Timestamp := (<- getTs)
   IO.print s!"⏱️ timestamp: {ts}"
