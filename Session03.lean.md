@@ -308,7 +308,7 @@ It also provides an interface to query the current timestamp:
 Note that this is a `IO` action, not a pure value (and indeed, the value
 part will change in time due to the side-effect of time passing ...).
 To print the timestamp, we need a `Timestamp` argument, not a `IO Timestamp`.
-To get the value out of the action, we use the `<-` notation:
+To get the value out of the action, we use the left arrow `<-` notation:
 
 ```lean4
 /--
@@ -319,10 +319,12 @@ def displayTime (_ : List String) : IO UInt32 := do
   let ts : Timestamp <- getTs -- or : let ts : Timestamp := (<- getTs)
   IO.print s!"⏱️ timestamp: {ts}"
   return 0
+```
 
+Of course, this left arrow can only be used within a do block associated
+to `IO` context.
 
-
-
+```lean4
 /-
 Inductive Types and Pattern Matching
 --------------------------------------------------------------------------------
