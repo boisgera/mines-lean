@@ -1,5 +1,7 @@
 
 ```lean4
+import Std
+
 import Mathlib
 ```
 
@@ -221,7 +223,7 @@ partial def Collatz.length (x0 : Nat) : Nat :=
 #guard Collatz.length 99 = 26
 ```
 
-Main CLI Entry Point
+CLI: more about `main`
 --------------------------------------------------------------------------------
 
 - arguments
@@ -234,7 +236,93 @@ Main CLI Entry Point
 
 
 
+The classic `main` definition
+
 ```lean4
+def main : IO Unit :=
+  IO.println "Hello Lean!"
+```
+
+can be augmented to support arguments and return code. Argument are the list
+of strings that you provide on the command-line after the name of your
+executable. For example, when you do
+
+```bash
+$ lake new my-project math
+```
+
+the `lake` executable is provided with the arguments `["new", "my-project", "math"]`.
+The return code is the information that your program provides to the caller
+to tell him if the program execution was a success (return code 0) or
+a failure (any other 32 bit unsiged integer).
+
+In bash, after a program call, this result is stored in a special variable
+named `?`. So to check that your lake command was a success, you would do:
+
+```bash
+$ lake new my-project math
+$ echo $?
+0
+```
+
+To use command-line arguments and return codes in Lean, change the signature
+of your definition of `main`:
+
+```lean4
+def main (args : List String) : IO UInt32 := do
+  if args.length > 0 then
+    IO.println s!"args: {args}"
+    return 0 -- 0 means success
+  else
+    IO.println "You have provided no argument"
+    return 1 -- non-zero means failure
+```
+
+The standard library gives us a `Timestamp` type that represent the time
+elapased since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time).
+This timestamp can be printed with `IO.println`.
+
+```lean4
+open Std.Time
+
+#check Timestamp
+-- Std.Time.Timestamp : Type
+
+#eval Timestamp.ofSecondsSinceUnixEpoch 60
+-- Timestamp.ofNanoseconds 60000000000
+
+#eval IO.println (Timestamp.ofSecondsSinceUnixEpoch 60)
+-- 60
+```
+
+It also provides an interface to query the current timestamp:
+
+```lean4
+#check Timestamp.now
+-- Std.Time.Timestamp.now : IO Timestamp
+
+#eval Timestamp.now
+-- Timestamp.ofNanoseconds 1793788691972331000
+```
+
+Note that this is a `IO` action, not a pure value (and indeed, the value
+part will change in time due to the side-effect of time passing ...).
+To print the timestamp, we need a `Timestamp` argument, not a `IO Timestamp`.
+To get the value out of the action, we use the `<-` notation:
+
+```lean4
+/--
+Display time elapsed since Unix epoch
+-/
+def displayTime (args : List String) : IO UInt32 := do
+  let getTs : IO Timestamp := Timestamp.now
+  let ts : Timestamp <- getTs -- or : let ts : Timestamp := (<- getTs)
+  IO.print s!"⏱️ timestamp: {ts}"
+  return 0
+
+
+
+
 /-
 Inductive Types and Pattern Matching
 --------------------------------------------------------------------------------
