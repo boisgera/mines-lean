@@ -153,7 +153,7 @@ well-founded recursion. In some cases, you may have to provide your own
 proof.
 For example, to compute the greatest common divisor of $m$ and $n$,
 we can use the property that it's the same as the greatest common divisor
-of $n$ and $m \% n$. To prove that the second argument is decreasing,
+of $n$ and $m \bmod n$. To prove that the second argument is decreasing,
 we use the theorem that if $m % n < m$ whenever $n > 0$.
 -/
 
