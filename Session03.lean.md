@@ -176,9 +176,9 @@ decreasing_by
 ```
 
 If you can't provide a proof that your recursion terminates in every
-case, or if you your function can genuinely not terminate for some
-values of the arguments but you still want an executable version of it,
-you can use the keyword `partial` instead:
+case, or if your function can genuinely not terminate for some
+values of its arguments but you still want an executable version of it,
+you can use the keyword `partial`:
 
 ```lean4
 partial def Partial.gcd (m n : Nat) : Nat :=
@@ -194,11 +194,13 @@ For example, the Collatz sequence, defined recursively with
 $x_{n + 1} = x_n / 2$ if $x_n$ is even and
 $x_{n + 1}$ if $x_n$ is odd, experimentally converges to $1$ in a finite
 number of steps for every positive initial value $x_0$ that has ever been
-tested (every integer up to $2.36 \times 10 ^ 31$). But we do not have a proof
+tested (every integer [up to $2.36 \times 10 ^ {31}$][Collatz]). But we do not have a proof
 that the property holds for every positive initial value.
 Therefore, if we want to implement recursively a function that computes the
 length of the Collatz sequence starting at a given value until it reaches 1,
 we are going to need the `partial` keyword.
+
+[Collatz]: https://en.wikipedia.org/wiki/Collatz_conjecture
 
 
 ```lean4
