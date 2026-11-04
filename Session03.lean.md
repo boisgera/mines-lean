@@ -194,8 +194,8 @@ For example, the Collatz sequence, defined recursively with
 $x_{n + 1} = x_n / 2$ if $x_n$ is even and
 $x_{n + 1}$ if $x_n$ is odd, experimentally converges to $1$ in a finite
 number of steps for every positive initial value $x_0$ that has ever been
-tested (every integer [up to $2.36 \times 10 ^ {31}$][Collatz]). But we do not have a proof
-that the property holds for every positive initial value.
+tested (every integer up to $2.36 \times 10 ^ {31}$, cf. [here][Collatz]).
+But we do not have a proof that the property holds for every positive initial value.
 Therefore, if we want to implement recursively a function that computes the
 length of the Collatz sequence starting at a given value until it reaches 1,
 we are going to need the `partial` keyword.
