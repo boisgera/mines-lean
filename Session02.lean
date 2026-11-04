@@ -47,7 +47,7 @@ SyntaxError: invalid syntax. Maybe you meant '==' or ':=' instead of '='?
 ```
 
 ```pycon
->>> print("(b := 1):") # "impure" expression: value + side effect
+>>> print(b := 1) # "impure" expression: value + side effect
 1
 >>> b
 1
@@ -375,7 +375,7 @@ the type `α` of the elements in the list can be inferred from the type
 You can however specify explicitly arguments declared as implicit if you want:
 -/
 
-#eval List.reverse (α := Nat) [1, 2, 3] -- [1, 2, 3]
+#eval List.reverse (α := Nat) [1, 2, 3] -- [3, 2, 1]
 
 #eval List.reverse (α := String) [1, 2, 3] -- [1, 2, 3] -- Nope...
 -- failed to synthesize instance of type class
