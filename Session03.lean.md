@@ -340,16 +340,12 @@ to build a value of this type: its *constructors*. In the simplest case, the
 constructors have no argument and the type is a mere enumeration of values
 (a sum type).
 
-```lean4
-/-
 The constructors are stored in the namespace of the type, hence `Light.green`.
 The type annotations (`: Type` for the type, `: Light` for the constructors)
 are optional, as demonstrated by `LightAlt`. We define everything in the
 `Traffic` namespace, so the full name of our type is `Traffic.Light`.
--/
 
-
-
+```lean4
 namespace Traffic
 
 /-- "enums" -/

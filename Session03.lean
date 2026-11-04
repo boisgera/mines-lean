@@ -353,7 +353,7 @@ constructors have no argument and the type is a mere enumeration of values
 (a sum type).
 -/
 
-/-
+/-!
 The constructors are stored in the namespace of the type, hence `Light.green`.
 The type annotations (`: Type` for the type, `: Light` for the constructors)
 are optional, as demonstrated by `LightAlt`. We define everything in the
